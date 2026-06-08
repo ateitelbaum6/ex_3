@@ -276,13 +276,12 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 void task1ReversePhraseImplementation(){
   char ch;
   scanf("%c ", &ch);
-  printf("reversed phrase is", %d);
+  printf("reversed phrase is", "%d");
   if (ch == '\n') {
     return;
   }
   task1ReversePhraseImplementation();
   printf("%c", ch);
-}
 }
 
 
