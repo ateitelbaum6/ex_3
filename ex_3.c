@@ -351,9 +351,11 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
 {
     int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE] = {0};
 
-    return zipDFS(board, solution, visited,
-                  size, startR, startC,
-                  1, highest);
+    return task4ZipHelper(board, solution, visited,
+                          size, startR, startC,
+                          1, highest);
+  
+    return 0;
 }
 
 int task4ZipHelper(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
