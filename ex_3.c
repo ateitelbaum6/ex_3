@@ -58,6 +58,8 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 int task2CheckPalindromeHelper(char phrase[], int, int);
 void task3GenSenImpHelper(char[][LONGEST_TERM+1], int, char[][LONGEST_TERM+1], int, 
                           char[][LONGEST_TERM+1], int, int, int, int, int);
+int task4ZipHelper(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
+                   int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int, int, int, int, int);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
@@ -306,7 +308,7 @@ int task2CheckPalindromeHelper(char phrase[], int leftSide, int rightSide) {
 
 void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int subjectsCount,
                                             char verbs[][LONGEST_TERM+1], int verbsCount,
-                                            char objects[][LONGEST_TERM+1], int objectsCount){
+                                            char objects[][LONGEST_TERM+1], int objectsCount) {
   
   task3GenSenImpHelper(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount, 0, 0, 0, 1);
 
@@ -347,8 +349,56 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
+    int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE] = {0};
+
+    return zipDFS(board, solution, visited,
+                  size, startR, startC,
+                  1, highest);
     return 0;
 }
+
+int task4ZipHelper(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
+                   int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size, int r, int c, int expected, int highest) {
+  if (board[r][c] == highest && expected == highest) {
+        solution[r][c] = 'X';
+        return 1;
+    }
+
+    visited[r][c] = 1;
+
+    if (board[r][c] == expected) {
+      expected++;
+    }
+    
+    if (r - 1 >= 0 && !visited[r - 1][c]) {
+      solution[r][c] = 'U';
+      if (zipDFS(board, solution, visited, size, r - 1, c, expected, highest))
+            return 1;
+    }
+
+    if (r + 1 < size && !visited[r + 1][c]) {
+      solution[r][c] = 'D';
+      if (zipDFS(board, solution, visited, size, r + 1, c, expected, highest))
+        return 1;
+    }
+
+    if (r - 1 >= 0 && !visited[r][c - 1]) {
+      solution[r][c] = 'L';
+      if (zipDFS(board, solution, visited, size, r, c - 1, expected, highest))
+        return 1;
+    }
+
+    if (c + 1 < size && !visited[r][c + 1]) {
+      solution[r][c] = 'R';
+      if (zipDFS(board, solution, visited, size, r, c + 1, expected, highest))
+        return 1;
+    }
+
+    visited[r][c] = 0;
+    solution[r][c] = 0;
+    return 0;
+}
+    
 
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
