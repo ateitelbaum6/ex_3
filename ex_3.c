@@ -314,7 +314,7 @@ void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int s
 
 void task3GenSenImpHelper(char subjects[][LONGEST_TERM+1], int subjectCount,
                           char verbs[][LONGEST_TERM+1], int verbCount,
-                          char objects[][LONGEST_TERM+1], int objectCount
+                          char objects[][LONGEST_TERM+1], int objectCount,
                           int subject, int verb, int object, int index){
   if (subject == subjectCount) {
     return;
