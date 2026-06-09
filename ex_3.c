@@ -55,7 +55,7 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 /******************************
 * HELPER FUNCTIONS PROTOTYPES *
 *******************************/
-
+int task2CheckPalindromeHelper(char phrase[], int leftSide, int rightSide);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
@@ -264,7 +264,7 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
         }
         printf("\n");
         if ((i + 1) % SUDOKU_SUBGRID_SIZE == 0)
-            printf("+-------+-------+-------+\n");
+            printf("+-------+-------+------ -+\n");
     }
 }
 
@@ -274,20 +274,31 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 
 
 void task1ReversePhraseImplementation(){
-  char ch;
-  scanf("%c", &ch);
-  if (ch == '\n') {
+  char letter;
+  scanf("%c", &letter);
+  if (letter == '\n') {
     return;
   }
   task1ReversePhraseImplementation();
-  printf("%c", ch);
+  printf("%c", letter);
 }
 
 
-int task2CheckPalindromeImplementation(int length)
-{
-  
+int task2CheckPalindromeImplementation(int length){
+  char phrase[LONGEST_SENTENCE + 1];
+  scanf("%[^\n]", phrase);
+  return task2CheckPalindromeHelper(phrase, 0, length-1);
+}
+
+int task2CheckPalindromeHelper(char phrase[], int leftSide, int rightSide) {
+  if (leftSide >= rightSide) {
+    return 1;
+  }
+  if (phrase[leftSide] != phrase[rightSide]) {
     return 0;
+  }
+
+  return task2CheckPalindromeHelper(phrase, leftSide+1, rightSide-1);
 }
 
 
