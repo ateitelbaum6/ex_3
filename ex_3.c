@@ -327,6 +327,11 @@ void task3GenSenImpHelper(char subjects[][LONGEST_TERM+1], int subjectCount,
     return;
   }
 
+  if (object == objectCount) {
+    task3GenSenImpHelper(subjects, subjectCount, verbs, verbCount, objects
+                         objectCount, subject, verb+1, 0, index);
+  }
+
   printf("%d. %s %s %s\n", index, subjects[subject], verbs[verb], objects[object]);
 
   task3GenSenImpHelper(subjects, subjectCount, verbs, verbCount, objects, 
