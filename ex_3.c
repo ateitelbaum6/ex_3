@@ -55,7 +55,9 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 /******************************
 * HELPER FUNCTIONS PROTOTYPES *
 *******************************/
-int task2CheckPalindromeHelper(char phrase[], int leftSide, int rightSide);
+int task2CheckPalindromeHelper(char phrase[], int, int);
+void task3GenSenImpHelper(char[][LONGEST_TERM+1], int, char[][LONGEST_TERM+1], int, 
+                          char[][LONGEST_TERM+1], int, int, int, int, int);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
@@ -305,8 +307,33 @@ int task2CheckPalindromeHelper(char phrase[], int leftSide, int rightSide) {
 void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int subjectsCount,
                                             char verbs[][LONGEST_TERM+1], int verbsCount,
                                             char objects[][LONGEST_TERM+1], int objectsCount){
+  
+  task3GenSenImpHelper(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount, 0, 0, 0, 1);
 
 }
+
+void task3GenSenImpHelper(char subjects[][LONGEST_TERM+1], int subjectCount,
+                          char verbs[][LONGEST_TERM+1], int verbCount,
+                          char objects[][LONGEST_TERM+1], int objectCount
+                          int subject, int verb, int object, int index){
+  if (subject == subjectCount) {
+    return;
+  }
+
+  if (verb == verbCount) {
+    task3GenSenImpHelper(subjects, subjectCount, verbs, verbCount, objects, 
+                         objectCount, subject+1, 0, 0, index);
+
+    return;
+  }
+
+  printf("%d. %s %s %s\n", index, subjects[subject], verbs[verb], objects[object]);
+
+  task3GenSenImpHelper(subjects, subjectCount, verbs, verbCount, objects, 
+                        objectCount, subject, verb, object+1, index+1);
+}
+
+  
 
 
 int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
