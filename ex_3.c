@@ -373,25 +373,25 @@ int task4ZipHelper(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char solutio
     
     if (r - 1 >= 0 && !visited[r - 1][c]) {
       solution[r][c] = 'U';
-      if (zipDFS(board, solution, visited, size, r - 1, c, expected, highest))
+      if (task4ZipHelper(board, solution, visited, size, r - 1, c, expected, highest))
             return 1;
     }
 
     if (r + 1 < size && !visited[r + 1][c]) {
       solution[r][c] = 'D';
-      if (zipDFS(board, solution, visited, size, r + 1, c, expected, highest))
+      if (task4ZipHelper(board, solution, visited, size, r + 1, c, expected, highest))
         return 1;
     }
 
     if (r - 1 >= 0 && !visited[r][c - 1]) {
       solution[r][c] = 'L';
-      if (zipDFS(board, solution, visited, size, r, c - 1, expected, highest))
+      if (task4ZipHelper(board, solution, visited, size, r, c - 1, expected, highest))
         return 1;
     }
 
     if (c + 1 < size && !visited[r][c + 1]) {
       solution[r][c] = 'R';
-      if (zipDFS(board, solution, visited, size, r, c + 1, expected, highest))
+      if (task4ZipHelper(board, solution, visited, size, r, c + 1, expected, highest))
         return 1;
     }
 
