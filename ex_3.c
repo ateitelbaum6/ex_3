@@ -444,8 +444,7 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 {
-    solveSudokuRec(board, 0, 0);
-    return 0;
+   return solveSudokuRec(board, 0, 0);
 }
 
 int findEmpty(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int *row, int *col, int r, int c)
