@@ -63,7 +63,7 @@ int solveZipRecursive(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int, int, int, int, int, int);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
-int findEmpty(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int, int);
+int findEmpty(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int*, int*, int, int);
 int isValidSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int, int);
 int solveSudokuRec(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int);
 int tryNumbers(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int);
