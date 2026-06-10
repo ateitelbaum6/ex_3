@@ -352,7 +352,7 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     int size, int startR, int startC, int highest)
 {
  int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE] = {0};
- return solveZipRecursive(board, solution, visited, size, startR, startC, 2, highest, 1);
+ return solveZipRecursive(board, solution, visited, size, startR, startC, 1, highest, 1);
 }
 
 int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
@@ -401,6 +401,7 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
+  solution[r][c] = 0;
 
     // DOWN
     solution[r][c] = 'D';
@@ -409,6 +410,7 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
+  solution[r][c] = 0;
 
     // LEFT
     solution[r][c] = 'L';
@@ -417,6 +419,7 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
+  solution[r][c] = 0;
 
     // RIGHT
     solution[r][c] = 'R';
@@ -425,6 +428,7 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
+  solution[r][c] = 0;
 
     // 🔴 FIX: BACKTRACK (this is REQUIRED)
     visited[r][c] = 0;
