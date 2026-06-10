@@ -129,6 +129,7 @@ int main()
 void task1ReversePhrase()
 {
     printf("Please insert the phrase to reverse:\n");
+    printf("The reversed phrase is:\n");
     task1ReversePhraseImplementation();
     printf("\n");
 }
@@ -284,7 +285,6 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 
 
 void task1ReversePhraseImplementation(){
-  printf("The reversed phrase is:\n");
   char letter;
   scanf("%c", &letter);
   if (letter == '\n') {
