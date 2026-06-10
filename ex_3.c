@@ -60,7 +60,7 @@ void task3GenSenImpHelper(char[][LONGEST_TERM+1], int, char[][LONGEST_TERM+1], i
                           char[][LONGEST_TERM+1], int, int, int, int, int);
 int solveZipRecursive(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
                       char[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
-                      int, int, int, int, int, int, int)
+                      int, int, int, int, int, int, int);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
