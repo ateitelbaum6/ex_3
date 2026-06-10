@@ -274,7 +274,7 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
         }
         printf("\n");
         if ((i + 1) % SUDOKU_SUBGRID_SIZE == 0)
-            printf("+-------+-------+------ -+\n");
+            printf("+-------+-------+-------+\n");
     }
 }
 
