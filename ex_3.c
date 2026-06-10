@@ -350,67 +350,86 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
- return solveZipRecursive(board, solution, size, startR, startC, highest, 1, 1, 0);
+ int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE] = {0};
+ return solveZipRecursive(board, solution, visited, size, startR, startC, 2, highest, 1);
 }
 
-int solveZipRecursive(int grid[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
+int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
                       char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
-                      int size, int r, int c, int highest, int visitedCount, int nextTarget, int dir) {
+                      int size, int r, int c, int nextNumber, int highest, int visitedCount) {
     
-   // 1. Boundary Protection Checks
-    if (r < 0 || r >= size || c < 0 || c >= size) return 0;
-    
-    // 2. Already Visited Tile Check
-    if (solution[r][c] != 0) return 0;
+  //  FIX: boundary check
+    if (r < 0 || r >= size || c < 0 || c >= size)
+        return 0;
 
-    // 3. Sequential Number Consistency Validation
-    if (grid[r][c] != 0 && grid[r][c] != nextTarget) return 0;
+    // 🔴 FIX: proper visited tracking (NOT solution[][])
+    if (visited[r][c])
+        return 0;
 
-    // Advance the internal matching target value if we land exactly on the expected numbered tile
-    int updatedTarget = (grid[r][c] == nextTarget) ? nextTarget + 1 : nextTarget;
-    
-    // 4. Final Solution Validation Case
-    if (visitedCount == size * size) {
-        // Must finish the path precisely on the cell holding the absolute highest value
-        if (grid[r][c] == highest) {
+    // 🔴 FIX: enforce ascending numbered tiles rule
+    if (board[r][c] != 0 && board[r][c] != nextNumber)
+        return 0;
+
+    // 🔴 FIX: mark visited
+    visited[r][c] = 1;
+
+    // 🔴 FIX: update next expected number
+    if (board[r][c] == nextNumber)
+        nextNumber++;
+
+    // 🔴 FIX: base case (must cover ALL cells)
+    if (visitedCount == size * size)
+    {
+        if (board[r][c] == highest)
+        {
             solution[r][c] = 'X';
             return 1;
         }
+
+        visited[r][c] = 0;
         return 0;
     }
 
-    // 5. Directional Branch Exploration (Strictly processing: U -> D -> L -> R)
-    if (dir == 0) { // Try Up
-        solution[r][c] = 'U';
-        if (solveZipRecursive(grid, solution, size, r - 1, c, highest, visitedCount + 1, updatedTarget, 0)) return 1;
-        // If "Up" failed from here, step forward sequentially to try the next direction choice (Down)
-        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 1);
-    }
-    if (dir == 1) { // Try Down
-        solution[r][c] = 'D';
-        if (solveZipRecursive(grid, solution, size, r + 1, c, highest, visitedCount + 1, updatedTarget, 0)) return 1;
-        // If "Down" failed from here, step forward sequentially to try the next direction choice (Left)
-        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 2);
-    }
-    if (dir == 2) { // Try Left
-        solution[r][c] = 'L';
-        if (solveZipRecursive(grid, solution, size, r, c - 1, highest, visitedCount + 1, updatedTarget, 0)) return 1;
-        // If "Left" failed from here, step forward sequentially to try the next direction choice (Right)
-        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 3);
-    }
-    if (dir == 3) { // Try Right
-        solution[r][c] = 'R';
-        if (solveZipRecursive(grid, solution, size, r, c + 1, highest, visitedCount + 1, updatedTarget, 0)) return 1;
-        
-        // --- BACKTRACKING TRIGGER ---
-        // If all path variations from this tile failed, restore its initial state and unwind stack frames
-        solution[r][c] = 0; 
-        return 0;
-    }
+    // 🔴 FIX: U → D → L → R recursion order (required by spec)
+
+    // UP
+    solution[r][c] = 'U';
+    if (solveZipRecursive(board, solution, visited,
+                 size, r - 1, c,
+                 nextNumber, highest,
+                 visitedCount + 1))
+        return 1;
+
+    // DOWN
+    solution[r][c] = 'D';
+    if (solveZipRecursive(board, solution, visited,
+                 size, r + 1, c,
+                 nextNumber, highest,
+                 visitedCount + 1))
+        return 1;
+
+    // LEFT
+    solution[r][c] = 'L';
+    if (solveZipRecursive(board, solution, visited,
+                 size, r, c - 1,
+                 nextNumber, highest,
+                 visitedCount + 1))
+        return 1;
+
+    // RIGHT
+    solution[r][c] = 'R';
+    if (solveZipRecursive(board, solution, visited,
+                 size, r, c + 1,
+                 nextNumber, highest,
+                 visitedCount + 1))
+        return 1;
+
+    // 🔴 FIX: BACKTRACK (this is REQUIRED)
+    visited[r][c] = 0;
+    solution[r][c] = 0;
 
     return 0;
 }
-    
 
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
