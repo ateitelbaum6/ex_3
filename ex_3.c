@@ -63,6 +63,10 @@ int solveZipRecursive(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int, int, int, int, int, int);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
+int findEmpty(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int, int);
+int isValidSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int, int);
+int solveSudokuRec(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int);
+int tryNumbers(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int, int, int);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
 
@@ -440,5 +444,73 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 {
+    solveSudokuRec(board, 0, 0);
     return 0;
 }
+
+int findEmpty(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int *row, int *col, int r, int c)
+{
+    if (r == SUDOKU_GRID_SIZE)
+        return 0;
+
+    if (c == SUDOKU_GRID_SIZE)
+        return findEmpty(board, row, col, r + 1, 0);
+
+    if (board[r][c] == 0)
+    {
+        *row = r;
+        *col = c;
+        return 1;
+    }
+
+    return findEmpty(board, row, col, r, c + 1);
+}
+
+int isValidSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
+                   int row, int col, int num, int i)
+{
+    if (i == SUDOKU_GRID_SIZE)
+        return 1;
+
+    if (board[row][i] == num || board[i][col] == num)
+        return 0;
+
+    int boxRow = 3 * (row / 3) + i / 3;
+    int boxCol = 3 * (col / 3) + i % 3;
+
+    if (board[boxRow][boxCol] == num)
+        return 0;
+
+    return isValidSudoku(board, row, col, num, i + 1);
+}
+
+int tryNumbers(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
+               int row, int col, int num)
+{
+    if (num > 9)
+        return 0;
+
+    if (isValidSudoku(board, row, col, num, 0))
+    {
+        board[row][col] = num;
+
+        if (solveSudokuRec(board, 0, 0))
+            return 1;
+
+        board[row][col] = 0;
+    }
+
+    return tryNumbers(board, row, col, num + 1);
+}
+
+int solveSudokuRec(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
+                   int row, int col)
+{
+    int r, c;
+
+    if (!findEmpty(board, &r, &c, 0, 0))
+        return 1; // no empty cells → solved
+
+    return tryNumbers(board, r, c, 1);
+}
+
