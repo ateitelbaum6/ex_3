@@ -129,7 +129,6 @@ int main()
 void task1ReversePhrase()
 {
     printf("Please insert the phrase to reverse:\n");
-    printf("The reversed phrase is:\n");
     task1ReversePhraseImplementation();
     printf("\n");
 }
@@ -291,6 +290,14 @@ void task1ReversePhraseImplementation(){
     return;
   }
   task1ReversePhraseImplementation();
+
+  static int printedLabel = 0;
+
+  if (!printedLabel) {
+    printf("The reversed phrase is:\n");
+    printedLabel = 1;
+  }
+  
   printf("%c", letter);
 }
 
