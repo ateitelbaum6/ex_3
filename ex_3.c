@@ -175,9 +175,9 @@ void task4SolveZipBoard()
     }
 
     printf("Please enter the grid:\n");
-    for (int i = 0; i < size-1; i++)
+    for (int i = 0; i < size; i++)
     {
-        for (int j = 0; j < size-1; j++)
+        for (int j = 0; j < size; j++)
         {
             scanf("%d", &board[i][j]);
             if (board[i][j] == 1)
