@@ -492,7 +492,7 @@ int tryNumbers(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
 }
 
 int solveSudokuRec(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
-                   int row, int col) {
+                   int, int) {
     int r, c;
 
     if (!findEmpty(board, &r, &c, 0, 0))
