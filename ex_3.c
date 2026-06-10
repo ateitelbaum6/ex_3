@@ -355,16 +355,23 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
 
 int solveZipRecursive(int grid[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
                       char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
-                      int size, int r, int c, int highest, int visitedCount, int nextTarget, int dirIdx) {
+                      int size, int r, int c, int highest, int visitedCount, int nextTarget, int dir) {
     
-    // Bounds and structural constraints check
-    if (r < 0 || r >= size || c < 0 || c >= size || solution[r][c] != 0) return 0;
+   // 1. Boundary Protection Checks
+    if (r < 0 || r >= size || c < 0 || c >= size) return 0;
+    
+    // 2. Already Visited Tile Check
+    if (solution[r][c] != 0) return 0;
+
+    // 3. Sequential Number Consistency Validation
     if (grid[r][c] != 0 && grid[r][c] != nextTarget) return 0;
 
-    int newTarget = (grid[r][c] == nextTarget) ? nextTarget + 1 : nextTarget;
+    // Advance the internal matching target value if we land exactly on the expected numbered tile
+    int updatedTarget = (grid[r][c] == nextTarget) ? nextTarget + 1 : nextTarget;
     
-    // Base Case: Path finished completely covering the grid size
+    // 4. Final Solution Validation Case
     if (visitedCount == size * size) {
+        // Must finish the path precisely on the cell holding the absolute highest value
         if (grid[r][c] == highest) {
             solution[r][c] = 'X';
             return 1;
@@ -372,26 +379,32 @@ int solveZipRecursive(int grid[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
         return 0;
     }
 
-    // Exploring movements strictly in mandated order: U -> D -> L -> R using structural recursive branches
-    if (dirIdx == 0) { // Try Up
+    // 5. Directional Branch Exploration (Strictly processing: U -> D -> L -> R)
+    if (dir == 0) { // Try Up
         solution[r][c] = 'U';
-        if (solveZipRecursive(grid, solution, size, r - 1, c, highest, visitedCount + 1, newTarget, 0)) return 1;
+        if (solveZipRecursive(grid, solution, size, r - 1, c, highest, visitedCount + 1, updatedTarget, 0)) return 1;
+        // If "Up" failed from here, step forward sequentially to try the next direction choice (Down)
         return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 1);
     }
-    if (dirIdx == 1) { // Try Down
+    if (dir == 1) { // Try Down
         solution[r][c] = 'D';
-        if (solveZipRecursive(grid, solution, size, r + 1, c, highest, visitedCount + 1, newTarget, 0)) return 1;
+        if (solveZipRecursive(grid, solution, size, r + 1, c, highest, visitedCount + 1, updatedTarget, 0)) return 1;
+        // If "Down" failed from here, step forward sequentially to try the next direction choice (Left)
         return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 2);
     }
-    if (dirIdx == 2) { // Try Left
+    if (dir == 2) { // Try Left
         solution[r][c] = 'L';
-        if (solveZipRecursive(grid, solution, size, r, c - 1, highest, visitedCount + 1, newTarget, 0)) return 1;
+        if (solveZipRecursive(grid, solution, size, r, c - 1, highest, visitedCount + 1, updatedTarget, 0)) return 1;
+        // If "Left" failed from here, step forward sequentially to try the next direction choice (Right)
         return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 3);
     }
-    if (dirIdx == 3) { // Try Right
+    if (dir == 3) { // Try Right
         solution[r][c] = 'R';
-        if (solveZipRecursive(grid, solution, size, r, c + 1, highest, visitedCount + 1, newTarget, 0)) return 1;
-        solution[r][c] = 0; // Backtrack
+        if (solveZipRecursive(grid, solution, size, r, c + 1, highest, visitedCount + 1, updatedTarget, 0)) return 1;
+        
+        // --- BACKTRACKING TRIGGER ---
+        // If all path variations from this tile failed, restore its initial state and unwind stack frames
+        solution[r][c] = 0; 
         return 0;
     }
 
