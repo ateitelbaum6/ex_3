@@ -290,6 +290,7 @@ void task1ReversePhraseImplementation(){
     return;
   }
   task1ReversePhraseImplementation();
+  printf("The reversed phrase is:\n");
   printf("%c", letter);
 }
 
@@ -364,30 +365,22 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                       int size, int r, int c, int nextNumber, int highest, int visitedCount) {
     
-  //  FIX: boundary check
     if (r < 0 || r >= size || c < 0 || c >= size)
         return 0;
 
-    // 🔴 FIX: proper visited tracking (NOT solution[][])
     if (visited[r][c])
         return 0;
 
-    // 🔴 FIX: enforce ascending numbered tiles rule
     if (board[r][c] != 0 && board[r][c] != nextNumber)
         return 0;
 
-    // 🔴 FIX: mark visited
     visited[r][c] = 1;
 
-    // 🔴 FIX: update next expected number
     if (board[r][c] == nextNumber)
         nextNumber++;
 
-    // 🔴 FIX: base case (must cover ALL cells)
-    if (visitedCount == size * size)
-    {
-        if (board[r][c] == highest)
-        {
+    if (visitedCount == size * size)  {
+        if (board[r][c] == highest) {
             solution[r][c] = 'X';
             return 1;
         }
@@ -396,45 +389,38 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
         return 0;
     }
 
-    // 🔴 FIX: U → D → L → R recursion order (required by spec)
-
-    // UP
     solution[r][c] = 'U';
     if (solveZipRecursive(board, solution, visited,
                  size, r - 1, c,
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
-  solution[r][c] = 0;
+    solution[r][c] = 0;
 
-    // DOWN
     solution[r][c] = 'D';
     if (solveZipRecursive(board, solution, visited,
                  size, r + 1, c,
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
-  solution[r][c] = 0;
+    solution[r][c] = 0;
 
-    // LEFT
     solution[r][c] = 'L';
     if (solveZipRecursive(board, solution, visited,
                  size, r, c - 1,
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
-  solution[r][c] = 0;
+    solution[r][c] = 0;
 
-    // RIGHT
     solution[r][c] = 'R';
     if (solveZipRecursive(board, solution, visited,
                  size, r, c + 1,
                  nextNumber, highest,
                  visitedCount + 1))
         return 1;
-  solution[r][c] = 0;
+    solution[r][c] = 0;
 
-    // 🔴 FIX: BACKTRACK (this is REQUIRED)
     visited[r][c] = 0;
     solution[r][c] = 0;
 
@@ -442,21 +428,18 @@ int solveZipRecursive(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
 }
 
 
-int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
-{
+int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]) {
    return solveSudokuRec(board, 0, 0);
 }
 
-int findEmpty(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int *row, int *col, int r, int c)
-{
+int findEmpty(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int *row, int *col, int r, int c) {
     if (r == SUDOKU_GRID_SIZE)
         return 0;
 
     if (c == SUDOKU_GRID_SIZE)
         return findEmpty(board, row, col, r + 1, 0);
 
-    if (board[r][c] == 0)
-    {
+    if (board[r][c] == 0) {
         *row = r;
         *col = c;
         return 1;
@@ -466,8 +449,7 @@ int findEmpty(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int *row, int *col,
 }
 
 int isValidSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
-                   int row, int col, int num, int i)
-{
+                   int row, int col, int num, int i) {
     if (i == SUDOKU_GRID_SIZE)
         return 1;
 
@@ -503,8 +485,7 @@ int tryNumbers(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
 }
 
 int solveSudokuRec(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE],
-                   int row, int col)
-{
+                   int row, int col) {
     int r, c;
 
     if (!findEmpty(board, &r, &c, 0, 0))
