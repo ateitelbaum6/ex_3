@@ -58,8 +58,9 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 int task2CheckPalindromeHelper(char phrase[], int, int);
 void task3GenSenImpHelper(char[][LONGEST_TERM+1], int, char[][LONGEST_TERM+1], int, 
                           char[][LONGEST_TERM+1], int, int, int, int, int);
-int task4ZipHelper(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
-                   int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int, int, int, int, int);
+int solveZipRecursive(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
+                      char[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
+                      int, int, int, int, int, int, int)
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
@@ -349,54 +350,51 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
-    int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE] = {0};
-
-    return task4ZipHelper(board, solution, visited,
-                          size, startR, startC,
-                          1, highest);
-  
-    return 0;
+ return solveZipRecursive(board, solution, size, startR, startC, highest, 1, 1, 0);
 }
 
-int task4ZipHelper(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
-                   int visited[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size, int r, int c, int expected, int highest) {
-  if (board[r][c] == highest && expected == highest) {
-        solution[r][c] = 'X';
-        return 1;
-    }
-
-    visited[r][c] = 1;
-
-    if (board[r][c] == expected) {
-      expected++;
-    }
+int solveZipRecursive(int grid[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
+                      char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], 
+                      int size, int r, int c, int highest, int visitedCount, int nextTarget, int dirIdx) {
     
-    if (r - 1 >= 0 && !visited[r - 1][c]) {
-      solution[r][c] = 'U';
-      if (task4ZipHelper(board, solution, visited, size, r - 1, c, expected, highest))
+    // Bounds and structural constraints check
+    if (r < 0 || r >= size || c < 0 || c >= size || solution[r][c] != 0) return 0;
+    if (grid[r][c] != 0 && grid[r][c] != nextTarget) return 0;
+
+    int newTarget = (grid[r][c] == nextTarget) ? nextTarget + 1 : nextTarget;
+    
+    // Base Case: Path finished completely covering the grid size
+    if (visitedCount == size * size) {
+        if (grid[r][c] == highest) {
+            solution[r][c] = 'X';
             return 1;
+        }
+        return 0;
     }
 
-    if (r + 1 < size && !visited[r + 1][c]) {
-      solution[r][c] = 'D';
-      if (task4ZipHelper(board, solution, visited, size, r + 1, c, expected, highest))
-        return 1;
+    // Exploring movements strictly in mandated order: U -> D -> L -> R using structural recursive branches
+    if (dirIdx == 0) { // Try Up
+        solution[r][c] = 'U';
+        if (solveZipRecursive(grid, solution, size, r - 1, c, highest, visitedCount + 1, newTarget, 0)) return 1;
+        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 1);
+    }
+    if (dirIdx == 1) { // Try Down
+        solution[r][c] = 'D';
+        if (solveZipRecursive(grid, solution, size, r + 1, c, highest, visitedCount + 1, newTarget, 0)) return 1;
+        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 2);
+    }
+    if (dirIdx == 2) { // Try Left
+        solution[r][c] = 'L';
+        if (solveZipRecursive(grid, solution, size, r, c - 1, highest, visitedCount + 1, newTarget, 0)) return 1;
+        return solveZipRecursive(grid, solution, size, r, c, highest, visitedCount, nextTarget, 3);
+    }
+    if (dirIdx == 3) { // Try Right
+        solution[r][c] = 'R';
+        if (solveZipRecursive(grid, solution, size, r, c + 1, highest, visitedCount + 1, newTarget, 0)) return 1;
+        solution[r][c] = 0; // Backtrack
+        return 0;
     }
 
-    if (r - 1 >= 0 && !visited[r][c - 1]) {
-      solution[r][c] = 'L';
-      if (task4ZipHelper(board, solution, visited, size, r, c - 1, expected, highest))
-        return 1;
-    }
-
-    if (c + 1 < size && !visited[r][c + 1]) {
-      solution[r][c] = 'R';
-      if (task4ZipHelper(board, solution, visited, size, r, c + 1, expected, highest))
-        return 1;
-    }
-
-    visited[r][c] = 0;
-    solution[r][c] = 0;
     return 0;
 }
     
